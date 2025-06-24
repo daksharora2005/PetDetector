@@ -1,74 +1,72 @@
-# Personalized-Doggy-Door
-🐶Personalized Doggy Door– A CNN-powered smart doggy door that distinguishes between your personal dog and other dogs, ensuring only your pet gets access! 🚪✨ #DeepLearning #PyTorch #ComputerVision
+# 🐶 PetDetector - Personalized Pet Door Classifier
 
-## Features
+A personalized pet identification system that distinguishes between your pet and other animals using deep learning. This project uses a fine-tuned VGG16 convolutional neural network with a simple Streamlit web app interface for image classification. No data is stored after training, ensuring user privacy.
 
-- **Accurate Dog Identification:** Utilizes a Convolutional Neural Network (CNN) to identify and differentiate your dog from others.
-- **Automated Access Control:** Integrates with a smart door mechanism to allow only your pet entry.
-- **Efficient Data Handling:** Employs PyTorch’s DataLoader with custom dataset classes for robust image processing.
-- **Real-World Application:** Blends deep learning with practical hardware integration.
+## 🚀 Features
+- ✅ Binary image classification (Your Pet vs. Not Your Pet)
+- ✅ Custom training using your own images
+- ✅ Live predictions on uploaded test images
+- ✅ Image augmentation for better generalization
+- ✅ Privacy-focused — no data storage beyond current session
+- ✅ Streamlit-based user-friendly interface
+- ✅ Software-only prototype, scalable for hardware deployment (e.g., Smart Pet Door)
 
-## Key Libraries & Technologies
+## 🏗️ Project Structure
+PetDetector/
+├── app.py # Streamlit App
+├── model_utils.py # Model building, training, prediction utilities
+├── uploaded_train_data/ # Temporary training/validation data
+├── uploaded_test_images/ # Temporary test images
+├── Data/ # ImageNet class index (for fun classifier)
+├── requirements.txt # Dependencies
+└── README.md # This file
 
-- **[PyTorch](https://pytorch.org/):** For building and training the CNN model.
-- **[Torchvision](https://pytorch.org/vision/stable/):** For image transformations and processing.
-- **[Pillow (PIL)](https://python-pillow.org/):** For image loading and preprocessing.
-- **glob:** For efficient file path matching.
-- **Jupyter Notebook:** For interactive development and experimentation.
-- **Git & GitHub:** For version control and collaboration.
 
-## Skills Demonstrated
+## 📦 Installation
+1. **Clone the repository:**
+git clone https://github.com/your-username/PetDetector.git
+cd PetDetector
 
-- **Deep Learning & CNNs:** Designing, training, and optimizing convolutional neural networks for image classification.
-- **Data Preprocessing:** Efficiently handling and transforming image data using Python libraries.
-- **Computer Vision:** Implementing state-of-the-art image processing techniques.
-- **Problem Solving:** Integrating software with hardware to solve a real-world problem.
-- **Version Control:** Managing projects effectively with Git and GitHub.
+2. **Install dependencies:**
 
-## Project Structure
+3. **Run the app:**
 
-Personalized-Doggy-Door/ ├── data/ │ └── presidential_doggy_door/ │ ├── train/ │ │ ├── bo/ │ │ └── not_bo/ │ └── valid/ ├── models/ │ └── (trained model files) ├── notebooks/ │ └── Personalized Doggy Door.ipynb ├── README.md └── requirements.txt
 
-markdown
-Copy
-Edit
+## 🏗️ How to Use
+### 🔧 Training
+- Go to **"Train a Model"** tab.
+- Upload images for:
+  - **Class 1:** Your pet (e.g., `your_pet`)
+  - **Class 2:** Others (e.g., `not_your_pet`)
+- Upload both **training** and **validation** images for each class.
+- Click **"🚀 Train Now"** to train a personalized model.
 
-*Note: Adjust the folder structure if necessary.*
+### 🔍 Testing
+- Switch to **"Test Image"** tab.
+- Upload any image to check whether it's your pet or not.
 
-## Installation
+### 🎉 Fun Classifier
+- Test with the ImageNet-pretrained VGG16 on any object (e.g., dogs, cats, bears).
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/daksharora2005/Personalized-Doggy-Door.git
-Navigate to the Project Folder:
-bash
-Copy
-Edit
-cd Personalized-Doggy-Door
-Install Dependencies:
-bash
-Copy
-Edit
-pip install -r requirements.txt
-Ensure you have Python 3.x installed.
-Usage
-Dataset Setup:
+## 🧠 Model Details
+- Architecture: **VGG16 pretrained on ImageNet**
+- Loss Function: **Binary Cross Entropy with Logits**
+- Optimizer: **Adam**
+- Image Size: **224x224 pixels**
+- Includes random rotations, crops, flips, and color jitter for augmentation.
 
-Place your images in data/presidential_doggy_door/ under the respective train and valid folders.
-Organize images into subfolders named bo (for your personal dog) and not_bo (for other dogs).
-Run the Jupyter Notebook:
+## 🔐 Privacy
+- ✅ Uploaded training, validation, and test images are automatically cleared every time the app restarts or retrains.
+- ✅ No data is stored permanently.
 
-bash
-Copy
-Edit
-jupyter notebook notebooks/Personalized\ Doggy\ Door.ipynb
-Follow the Notebook Instructions:
+## ✨ Future Scope
+- Hardware integration (e.g., automate pet door with IoT).
+- Extension to multi-pet identification.
+- Deployment on cloud or edge devices.
 
-Train and evaluate the CNN model.
-Experiment with different parameters and monitor the performance.
-Acknowledgements
-Thanks to the open-source community for the amazing libraries and tools that made this project possible.
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+## 🤝 Acknowledgements
+- Built as part of an internship project at **CodeFirst Technology** under the **AICTE Virtual Internship Program**.
+- Uses open-source libraries: **PyTorch**, **Torchvision**, **Streamlit**, **Pillow**, etc.
 
-Happy coding and enjoy building your smart doggy door! 🚀🐶
+## 🐾 License
+This project is open source and available under the MIT License.

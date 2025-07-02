@@ -1,4 +1,5 @@
 # 🐶 PetDetector - Personalized Pet Door Classifier
+## Streamlit application: https://petdetector-prototype-daksharora.streamlit.app/
 
 A personalized pet identification system that distinguishes between your pet and other animals using deep learning. This project uses a fine-tuned VGG16 convolutional neural network with a simple Streamlit web app interface for image classification. No data is stored after training, ensuring user privacy.
 

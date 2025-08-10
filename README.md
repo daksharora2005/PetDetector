@@ -2,7 +2,7 @@
 ## Streamlit application: https://petdetector-prototype-daksharora.streamlit.app/
 **Note: The current streamlit application does not support my dynamic main model due to limited computation for free tier 😓. But on the flip side you can still access FunImageClassifier to identify any animal ✌️ on streamlit app or just fork the repo for full features.
 
-A personalized pet identification system that distinguishes between your pet and other animals using deep learning. This project uses a fine-tuned VGG16 convolutional neural network with a simple Streamlit web app interface for image classification. No data is stored after training, ensuring user privacy.
+Description: A personalized pet identification system that distinguishes between your pet and other animals using deep learning. This project uses a fine-tuned VGG16 convolutional neural network with a simple Streamlit web app interface for image classification. No data is stored after training, ensuring user privacy.
 
 ## 🚀 Features
 - ✅ Binary image classification (Your Pet vs. Not Your Pet)

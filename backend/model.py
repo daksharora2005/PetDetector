@@ -39,7 +39,40 @@ def get_transforms():
     ])
     return base_trans, augment
 
-# ...
+class BinaryImageDataset(Dataset):
+    def __init__(self, data_dir, transform, class_order):
+        self.image_paths = []
+        self.labels = []
+        self.class_map = {}
+        self.transform = transform
+        
+        # Robustly find images
+        for idx, label in enumerate(class_order):
+            self.class_map[idx] = label
+            # Recursively find images
+            p = os.path.join(data_dir, label)
+            valid_exts = {'.jpg', '.jpeg', '.png', '.bmp'}
+            
+            # Walk through directory
+            for root, dirs, files in os.walk(p):
+                for file in files:
+                    if os.path.splitext(file)[1].lower() in valid_exts:
+                         self.image_paths.append(os.path.join(root, file))
+                         self.labels.append(float(idx))
+                
+    def __getitem__(self, index):
+        path = self.image_paths[index]
+        label = self.labels[index]
+        try:
+            img = Image.open(path).convert("RGB")
+            img_tensor = self.transform(img)
+            return img_tensor, torch.tensor(label)
+        except Exception:
+            # Return blank image on failure
+            return torch.zeros((3, 224, 224)), torch.tensor(label)
+
+    def __len__(self):
+        return len(self.image_paths)
 
 def build_model():
     base = mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT)

@@ -3,6 +3,8 @@
 set -o errexit
 
 echo "Installing Python Dependencies..."
+# Install CPU-only PyTorch to save space and time (Critical for Render Free Tier)
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
 
 echo "Building Frontend..."

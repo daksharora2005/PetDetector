@@ -116,7 +116,7 @@ def run_training_task(class1: str, class2: str):
 
 # === Endpoints ===
 
-@app.get("/")
+@app.get("/api")
 def read_root():
     return {"message": "Pet Detector Backend API"}
 

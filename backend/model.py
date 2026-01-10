@@ -5,8 +5,27 @@ import torch.nn as nn
 from torch.utils.data import Dataset
 from torchvision import transforms
 from torchvision.models import mobilenet_v2, MobileNet_V2_Weights
+import numpy as np
+import cv2
+import base64
+from io import BytesIO
+from PIL import Image
 
-# ... 
+# Try importing GradCAM, handle if missing
+try:
+    from pytorch_grad_cam import GradCAM
+    from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
+    from pytorch_grad_cam.utils.image import show_cam_on_image
+    HAS_GRADCAM = True
+except ImportError:
+    HAS_GRADCAM = False
+
+# Use CUDA if available, otherwise CPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+IMG_WIDTH, IMG_HEIGHT = (224, 224)
+BATCH_SIZE = 16  
+EPOCHS = 5 
 
 def get_transforms():
     weights = MobileNet_V2_Weights.DEFAULT

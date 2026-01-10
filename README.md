@@ -27,23 +27,32 @@
 
 *   **Frontend**: React, Tailwind CSS, Framer Motion, Axios.
 *   **Backend**: FastAPI, Uvicorn, Python 3.9+.
-*   **Machine Learning**: PyTorch (VGG16 Transfer Learning), Grad-CAM.
-*   **Deployment**: Ready for Render.com or Local Production.
+*   **Machine Learning**: PyTorch (MobileNetV2 Transfer Learning), Grad-CAM.
+*   **Deployment**: Dockerized for Hugging Face Spaces (or any Container service).
 
 ---
 
 ## ☁️ Deployment (Recommended)
 
-This project is configured for **1-Click Deployment on Render.com**.
+## ☁️ Cloud Deployment (Hugging Face Spaces) - Recommended
 
-### How to Deploy
-1.  Push this repository to **GitHub**.
-2.  Go to [Render.com](https://render.com) and create a **New Web Service**.
-3.  Connect your repository.
-4.  Use these settings:
-    *   **Build Command**: `./render-build.sh`
-    *   **Start Command**: `python backend/production.py`
-5.  **Environment Variables**: Add `GEMINI_API_KEY` in the Render dashboard.
+We use **Hugging Face Spaces** because it offers generous **16GB RAM** for free, which is perfect for running AI models like PetGuard.
+
+1.  **Create a Space**:
+    *   Go to [huggingface.co/new-space](https://huggingface.co/new-space).
+    *   Select **Docker** as the SDK.
+    *   Choose "Blank" template.
+    *   Set visibility to **Public**.
+
+2.  **Deploy Code**:
+    *   **Option A**: Connect this GitHub repository in the Space settings.
+    *   **Option B**: Drag and drop all project files into the Space's "Files" tab.
+
+3.  **Add Your API Key**:
+    *   Go to Space **Settings** -> **Variables and secrets**.
+    *   Add a new Secret: `GEMINI_API_KEY` with your Google Gemini key.
+
+The app will build automatically (takes ~5 mins) and launch! 🚀
 
 ---
 

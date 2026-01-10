@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = ''; // Relative path for production
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -13,7 +13,7 @@ export const uploadImages = async (files, split, classname) => {
   });
   formData.append('split', split);
   formData.append('classname', classname);
-  
+
   return api.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });

@@ -17,13 +17,14 @@ if os.path.exists(STATIC_DIR):
     # Also mount public/demo.mp4 if it was copied to root of dist, usually it is.
     # Vite copies public/* to dist root.
     
-    @app.get("/")
-    async def serve_spa():
-        return FileResponse(os.path.join(STATIC_DIR, "index.html"))
-
-    # Catch-all for React Router (if used in future)
-    @app.exception_handler(404)
-    async def custom_404_handler(_, __):
+    @app.get("/{full_path:path}")
+    async def serve_spa_or_static(full_path: str):
+        # Check if it matches a file in static dir (e.g. demo.mp4, vite.svg)
+        potential_path = os.path.join(STATIC_DIR, full_path)
+        if os.path.exists(potential_path) and os.path.isfile(potential_path):
+            return FileResponse(potential_path)
+            
+        # Otherwise serve index.html for SPA routing
         return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
     print(f"✅ Production Server Ready: Serving Frontend from {STATIC_DIR}")

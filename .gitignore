@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+.venv/
+env/
+
+# Data & Models
+# Exclude the large model file to fix GitHub push
+backend/trained_models/*.pth
+backend/data/temp_*
+uploaded_train_data/
+uploaded_test_images/
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+debug_log.txt

@@ -7,7 +7,7 @@ import asyncio
 from typing import List
 import json
 import torch
-from torchvision.models import vgg16, VGG16_Weights
+from torchvision.models import mobilenet_v2, MobileNet_V2_Weights
 from PIL import Image
 
 from model import train_model, predict_image, get_transforms
@@ -161,11 +161,9 @@ async def predict_fun(file: UploadFile = File(...)):
     with open(temp_path, "wb+") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Load VGG16 (standard, pre-trained)
-    # Note: In production, load this ONCE at startup to save time.
-    # For now ensuring it works dynamically.
-    weights = VGG16_Weights.DEFAULT
-    model = vgg16(weights=weights)
+    # Load MobileNetV2 (Lightweight, ~14MB vs 500MB VGG16)
+    weights = MobileNet_V2_Weights.DEFAULT
+    model = mobilenet_v2(weights=weights)
     model.eval()
     
     # Load Imagenet classes
@@ -177,7 +175,7 @@ async def predict_fun(file: UploadFile = File(...)):
             # dict is "0": ["n01440764", "tench"]
             labels = {int(k): v[1] for k,v in class_idx.items()}
     else:
-        # Fallback if file missing (downloaded automatically by weights.meta usually but let's be safe)
+        # Fallback if file missing
         labels = weights.meta["categories"]
 
     preprocess = weights.transforms()

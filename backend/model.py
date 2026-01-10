@@ -4,31 +4,12 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 from torchvision import transforms
-from torchvision.models import vgg16, VGG16_Weights
-from PIL import Image
-import numpy as np
-import cv2
-import base64
-from io import BytesIO
+from torchvision.models import mobilenet_v2, MobileNet_V2_Weights
 
-# Try importing GradCAM, handle if missing
-try:
-    from pytorch_grad_cam import GradCAM
-    from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-    from pytorch_grad_cam.utils.image import show_cam_on_image
-    HAS_GRADCAM = True
-except ImportError:
-    HAS_GRADCAM = False
-
-# Use CUDA if available, otherwise CPU
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-IMG_WIDTH, IMG_HEIGHT = (224, 224)
-BATCH_SIZE = 16  
-EPOCHS = 5      
+# ... 
 
 def get_transforms():
-    weights = VGG16_Weights.DEFAULT
+    weights = MobileNet_V2_Weights.DEFAULT
     base_trans = weights.transforms()
     augment = transforms.Compose([
         transforms.RandomRotation(25),
@@ -39,55 +20,30 @@ def get_transforms():
     ])
     return base_trans, augment
 
-class BinaryImageDataset(Dataset):
-    def __init__(self, data_dir, transform, class_order):
-        self.image_paths = []
-        self.labels = []
-        self.class_map = {}
-        self.transform = transform
-        
-        # Robustly find images
-        for idx, label in enumerate(class_order):
-            self.class_map[idx] = label
-            # Recursively find images
-            p = os.path.join(data_dir, label)
-            valid_exts = {'.jpg', '.jpeg', '.png', '.bmp'}
-            
-            # Walk through directory
-            for root, dirs, files in os.walk(p):
-                for file in files:
-                    if os.path.splitext(file)[1].lower() in valid_exts:
-                         self.image_paths.append(os.path.join(root, file))
-                         self.labels.append(float(idx))
-                
-    def __getitem__(self, index):
-        path = self.image_paths[index]
-        label = self.labels[index]
-        try:
-            img = Image.open(path).convert("RGB")
-            img_tensor = self.transform(img)
-            return img_tensor, torch.tensor(label)
-        except Exception:
-            return torch.zeros((3, 224, 224)), torch.tensor(label)
-
-    def __len__(self):
-        return len(self.image_paths)
+# ...
 
 def build_model():
-    base = vgg16(weights=VGG16_Weights.DEFAULT)
-    # We need to unfreeze the last block for GradCAM to be more effective sometimes, 
-    # but for features extraction, we usually freeze.
-    # For GradCAM to work on the last conv layer, it must be accessible.
-    # VGG16: features[-1] is the last MaxPool, features[-2] is ReLU, features[-3] is Conv2d.
-    base.requires_grad_(False) 
+    base = mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT)
     
-    model = nn.Sequential(
-        base,
-        nn.Linear(1000, 256),
+    # Freeze implementation for transfer learning
+    for param in base.parameters():
+        param.requires_grad = False
+        
+    # MobileNetV2 classifier is base.classifier
+    # We replace it entirely for binary classification
+    # Architecture: features -> <avgpool> -> classifier
+    
+    model = base
+    # Replace the last layer (classifier) with our custom head
+    # MobileNetV2 classifier input is 1280
+    model.classifier = nn.Sequential(
+        nn.Dropout(0.2),
+        nn.Linear(1280, 256),
         nn.ReLU(),
         nn.Dropout(0.5),
         nn.Linear(256, 1)
     )
+    
     return model.to(device)
 
 def get_batch_accuracy(output, y):
@@ -175,10 +131,9 @@ def generate_heatmap(model, image_tensor, image_pil):
         return None
 
     try:
-        # VGG16 features are in model[0].features
-        # The last conv layer is usually index 28 (Conv2d(512, 512, 3))
-        # model structure: Sequential(VGG, Linear...) -> VGG is model[0]
-        target_layer = model[0].features[-1] 
+        # MobileNetV2 features are in model.features
+        # The last conv layer is model.features[-1]
+        target_layer = model.features[-1] 
         
         # We need to construct a wrapper to treat the whole model as something that outputs a class
         # But our model outputs a single logit (binary).
